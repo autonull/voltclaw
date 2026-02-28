@@ -282,7 +282,7 @@ export const browserEvalTool: Tool = {
       const { script } = EvalSchema.parse(args);
       const page = await getPage();
       const result = await page.evaluate((code) => {
-        // eslint-disable-next-line no-eval
+
         return eval(code);
       }, script);
       return { result: String(result) };

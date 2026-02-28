@@ -23,7 +23,8 @@ export class IrcChannel implements Channel {
     this.identity = { publicKey: config.nick };
     this.client = new Client();
 
-    this.client.on('message', (event: any) => {
+    this.client.on('message', (e: unknown) => {
+      const event = e as { nick: string; target: string; message: string };
       // Ignore our own messages
       if (event.nick === this.config.nick) {
         return;
@@ -44,7 +45,7 @@ export class IrcChannel implements Channel {
       }
     });
 
-    this.client.on('error', (err: any) => {
+    this.client.on('error', (err: unknown) => {
       console.error('IRC Client Error:', err);
     });
   }
@@ -63,9 +64,9 @@ export class IrcChannel implements Channel {
         resolve();
       });
 
-      this.client.on('error', (err: any) => {
+      this.client.on('error', (err: unknown) => {
         if (!this.isConnected) {
-            reject(err);
+            reject(err instanceof Error ? err : new Error(String(err)));
         }
       });
 

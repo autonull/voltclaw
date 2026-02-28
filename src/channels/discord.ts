@@ -85,7 +85,10 @@ export class DiscordChannel implements Channel {
      if (!this.eventHandlers.has(event)) {
       this.eventHandlers.set(event, []);
     }
-    this.eventHandlers.get(event)!.push(handler);
+    const handlers = this.eventHandlers.get(event);
+    if (handlers) {
+      handlers.push(handler);
+    }
   }
 
   private emit(event: string, ...args: unknown[]): void {

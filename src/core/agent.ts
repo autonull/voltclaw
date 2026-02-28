@@ -752,7 +752,7 @@ export class VoltClawAgent {
         await this.handleSubtask(subSession, parsed, from);
       } else if (parsed?.type === 'subtask_result') {
         // Resolve the session that initiated the task using parentPubkey if available
-        let targetSession = session;
+        const targetSession = session;
         if (parsed.parentPubkey) {
             const pKey = parsed.parentPubkey as string;
             const isSelfParent = pKey === this.channel.identity.publicKey;
