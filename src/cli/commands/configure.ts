@@ -25,7 +25,7 @@ export async function configureCommand(): Promise<void> {
       type: 'input',
       name: 'model',
       message: 'Enter Model Name:',
-      default: (answers: any) => {
+      default: (answers: Record<string, unknown>): string => {
         if (answers.provider === 'ollama') return 'llama3.2';
         if (answers.provider === 'openai') return 'gpt-4o';
         if (answers.provider === 'anthropic') return 'claude-3-5-sonnet-20241022';
@@ -37,19 +37,20 @@ export async function configureCommand(): Promise<void> {
       name: 'baseUrl',
       message: 'Enter Base URL (optional):',
       default: 'http://localhost:11434',
-      when: (answers: any) => answers.provider === 'ollama'
+      when: (answers: Record<string, unknown>): boolean => answers.provider === 'ollama'
     },
     {
       type: 'password',
       name: 'apiKey',
       message: 'Enter API Key:',
-      when: (answers: any) => answers.provider !== 'ollama',
+      when: (answers: Record<string, unknown>): boolean => answers.provider !== 'ollama',
       mask: '*'
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any);
 
   // 2. Channel Configuration
-  const channels = [...(currentConfig.channels || [])];
+  const channels = [...(currentConfig.channels ?? [])];
 
   // Configure Nostr
   const nostrEnabled = await inquirer.prompt([
@@ -57,12 +58,13 @@ export async function configureCommand(): Promise<void> {
           type: 'confirm',
           name: 'enable',
           message: 'Enable Nostr integration?',
-          default: !!channels.find(c => c.type === 'nostr')
+          default: channels.some(c => c.type === 'nostr')
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any);
 
-  if (nostrEnabled.enable) {
-      const existingRelays = channels.find(c => c.type === 'nostr')?.relays || [
+  if (nostrEnabled.enable === true) {
+      const existingRelays = channels.find(c => c.type === 'nostr')?.relays ?? [
         'wss://relay.damus.io',
         'wss://nos.lol',
         'wss://relay.nostr.band'
@@ -75,9 +77,10 @@ export async function configureCommand(): Promise<void> {
           message: 'Enter Nostr Relays (comma separated):',
           default: existingRelays.join(', ')
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any);
 
-      const relays = nostrAnswers.relays.split(',').map((r: string) => r.trim()).filter((r: string) => r);
+      const relays = nostrAnswers.relays.split(',').map((r: string) => r.trim()).filter((r: string) => r !== '');
 
       const idx = channels.findIndex(c => c.type === 'nostr');
       if (idx >= 0) {
@@ -96,22 +99,27 @@ export async function configureCommand(): Promise<void> {
       type: 'confirm',
       name: 'enable',
       message: 'Enable Telegram integration?',
-      default: !!channels.find(c => c.type === 'telegram') || !!process.env.TELEGRAM_TOKEN
+      default: channels.some(c => c.type === 'telegram') || process.env.TELEGRAM_TOKEN !== undefined
     },
     {
       type: 'password',
       name: 'token',
       message: 'Enter Telegram Bot Token:',
-      when: (answers: any) => answers.enable && !process.env.TELEGRAM_TOKEN,
+      when: (answers: Record<string, unknown>): boolean => answers.enable === true && process.env.TELEGRAM_TOKEN === undefined,
       default: channels.find(c => c.type === 'telegram')?.token,
       mask: '*'
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any);
 
-  if (telegramAnswers.enable) {
+  if (telegramAnswers.enable === true) {
       const existing = channels.findIndex(c => c.type === 'telegram');
-      const token = telegramAnswers.token || channels.find(c => c.type === 'telegram')?.token || process.env.TELEGRAM_TOKEN;
-      const config = { type: 'telegram' as const, token };
+      const token = telegramAnswers.token ?? channels.find(c => c.type === 'telegram')?.token ?? process.env.TELEGRAM_TOKEN;
+      if (token === undefined || token === '') {
+        console.error('Telegram token is required.');
+        return;
+      }
+      const config = { type: 'telegram' as const, token: String(token) };
       if (existing >= 0) {
           channels[existing] = config;
       } else {
@@ -128,22 +136,27 @@ export async function configureCommand(): Promise<void> {
       type: 'confirm',
       name: 'enable',
       message: 'Enable Discord integration?',
-      default: !!channels.find(c => c.type === 'discord') || !!process.env.DISCORD_TOKEN
+      default: channels.some(c => c.type === 'discord') || process.env.DISCORD_TOKEN !== undefined
     },
     {
       type: 'password',
       name: 'token',
       message: 'Enter Discord Bot Token:',
-      when: (answers: any) => answers.enable && !process.env.DISCORD_TOKEN,
+      when: (answers: Record<string, unknown>): boolean => answers.enable === true && process.env.DISCORD_TOKEN === undefined,
       default: channels.find(c => c.type === 'discord')?.token,
       mask: '*'
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any);
 
-  if (discordAnswers.enable) {
+  if (discordAnswers.enable === true) {
       const existing = channels.findIndex(c => c.type === 'discord');
-      const token = discordAnswers.token || channels.find(c => c.type === 'discord')?.token || process.env.DISCORD_TOKEN;
-      const config = { type: 'discord' as const, token };
+      const token = discordAnswers.token ?? channels.find(c => c.type === 'discord')?.token ?? process.env.DISCORD_TOKEN;
+      if (token === undefined || token === '') {
+        console.error('Discord token is required.');
+        return;
+      }
+      const config = { type: 'discord' as const, token: String(token) };
       if (existing >= 0) {
           channels[existing] = config;
       } else {
@@ -170,11 +183,12 @@ export async function configureCommand(): Promise<void> {
       name: 'action',
       message: 'Nostr Identity Management:',
       choices: [
-        { name: 'Keep existing identity', value: 'keep', disabled: !keys.secretKey },
+        { name: 'Keep existing identity', value: 'keep', disabled: keys.secretKey === '' },
         { name: 'Generate new identity', value: 'generate' },
         { name: 'Import private key (nsec/hex)', value: 'import' }
       ]
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any);
 
   if (identityChoice.action === 'generate') {
@@ -188,6 +202,7 @@ export async function configureCommand(): Promise<void> {
         message: 'Enter private key (nsec or hex):',
         mask: '*'
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ] as any);
     const hex = resolveToHex(importAnswer.key);
     if (hex.length !== 64) {
@@ -213,10 +228,10 @@ export async function configureCommand(): Promise<void> {
     ...currentConfig,
     channels: channels,
     llm: {
-      provider: llmAnswers.provider as any,
-      model: llmAnswers.model,
-      baseUrl: llmAnswers.baseUrl,
-      apiKey: llmAnswers.apiKey
+      provider: String(llmAnswers.provider) as 'ollama' | 'openai' | 'anthropic',
+      model: String(llmAnswers.model),
+      baseUrl: llmAnswers.baseUrl !== undefined && llmAnswers.baseUrl !== '' ? String(llmAnswers.baseUrl) : undefined,
+      apiKey: llmAnswers.apiKey !== undefined && llmAnswers.apiKey !== '' ? String(llmAnswers.apiKey) : undefined
     }
   };
 
@@ -226,35 +241,36 @@ export async function configureCommand(): Promise<void> {
       type: 'input',
       name: 'admins',
       message: 'Enter Admin Pubkeys (comma separated):',
-      default: (currentConfig.permissions?.admins || []).join(', ')
+      default: (currentConfig.permissions?.admins ?? []).join(', ')
     },
     {
       type: 'input',
       name: 'users',
       message: 'Enter Trusted User Pubkeys (comma separated):',
-      default: (currentConfig.permissions?.users || []).join(', ')
+      default: (currentConfig.permissions?.users ?? []).join(', ')
     },
     {
       type: 'input',
       name: 'agents',
       message: 'Enter Trusted Agent Pubkeys (comma separated):',
-      default: (currentConfig.permissions?.agents || []).join(', ')
+      default: (currentConfig.permissions?.agents ?? []).join(', ')
     },
     {
       type: 'list',
       name: 'policy',
       message: 'Default Policy:',
       choices: ['allow_all', 'deny_all'],
-      default: currentConfig.permissions?.policy || 'allow_all'
+      default: currentConfig.permissions?.policy ?? 'allow_all'
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any);
 
   const finalConfig: CLIConfig = {
     ...newConfig,
     permissions: {
-      admins: permissionAnswers.admins.split(',').map((s: string) => s.trim()).filter((s: string) => s),
-      users: permissionAnswers.users.split(',').map((s: string) => s.trim()).filter((s: string) => s),
-      agents: permissionAnswers.agents.split(',').map((s: string) => s.trim()).filter((s: string) => s),
+      admins: permissionAnswers.admins.split(',').map((s: string) => s.trim()).filter((s: string) => s !== ''),
+      users: permissionAnswers.users.split(',').map((s: string) => s.trim()).filter((s: string) => s !== ''),
+      agents: permissionAnswers.agents.split(',').map((s: string) => s.trim()).filter((s: string) => s !== ''),
       policy: permissionAnswers.policy as 'allow_all' | 'deny_all'
     }
   };
@@ -286,9 +302,10 @@ export async function configureCommand(): Promise<void> {
       message: 'Do you want to edit the User Profile?',
       default: false
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any);
 
-  if (workspaceAnswers.editSoul) {
+  if (workspaceAnswers.editSoul === true) {
     const soulContent = await workspace.loadFile('SOUL.md');
     const newSoul = await inquirer.prompt([
       {
@@ -297,11 +314,12 @@ export async function configureCommand(): Promise<void> {
         message: 'Edit SOUL.md',
         default: soulContent
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ] as any);
     await workspace.saveFile('SOUL.md', newSoul.content);
   }
 
-  if (workspaceAnswers.editUser) {
+  if (workspaceAnswers.editUser === true) {
     const userContent = await workspace.loadFile('USER.md');
     const newUser = await inquirer.prompt([
       {
@@ -310,6 +328,7 @@ export async function configureCommand(): Promise<void> {
         message: 'Edit USER.md',
         default: userContent
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ] as any);
     await workspace.saveFile('USER.md', newUser.content);
   }

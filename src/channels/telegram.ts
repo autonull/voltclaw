@@ -23,8 +23,8 @@ export class TelegramChannel implements Channel {
       this.identity.publicKey = me.username ?? 'telegram-bot';
 
       this.bot.on('text', async (ctx: Context) => {
-        if (!this.messageHandler) return;
-        if (!ctx.message || !('text' in ctx.message)) return;
+        if (this.messageHandler === undefined) return;
+        if (ctx.message === undefined || !('text' in ctx.message)) return;
 
         const from = String(ctx.chat?.id ?? 'unknown');
         const content = ctx.message.text ?? '';
@@ -76,10 +76,12 @@ export class TelegramChannel implements Channel {
   }
 
   on(event: 'connected' | 'disconnected' | 'error', handler: EventHandler): void {
-    if (!this.eventHandlers.has(event)) {
-      this.eventHandlers.set(event, []);
+    const handlers = this.eventHandlers.get(event);
+    if (handlers) {
+      handlers.push(handler as EventHandler);
+    } else {
+      this.eventHandlers.set(event, [handler as EventHandler]);
     }
-    this.eventHandlers.get(event)!.push(handler as EventHandler);
   }
 
   private emit(event: string, ...args: unknown[]): void {
