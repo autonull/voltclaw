@@ -10,6 +10,7 @@ describe('Parallel Call Integration', () => {
 
   it('calls multiple tasks in parallel', async () => {
     harness = new TestHarness({
+      rlm: { enabled: true },
       relayPort: 40405,
       llm: new MockLLM({
         handler: async (messages) => {

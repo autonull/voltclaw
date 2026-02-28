@@ -18,9 +18,17 @@ export interface VoltClawAgentOptions {
   audit?: { path?: string };
   permissions?: PermissionConfig;
   rlm?: CodeExecConfig;
+  lcm?: LCMConfig;
+  profiles?: Record<string, any>;
+}
+
+export interface LCMConfig {
+  enabled: boolean;
+  compressionLevel?: string;
 }
 
 export interface CodeExecConfig {
+  enabled?: boolean;
   rlmTimeoutMs?: number;
   contextSizeThreshold?: number;
 }
@@ -65,11 +73,15 @@ export interface RateLimitConfig {
 }
 
 export interface ChannelConfig {
-  type: 'nostr' | 'websocket' | 'stdio' | 'memory' | 'telegram' | 'discord';
+  type: 'nostr' | 'websocket' | 'stdio' | 'memory' | 'telegram' | 'discord' | 'irc';
   relays?: string[];
   privateKey?: string;
   port?: number;
   token?: string;
+  server?: string;
+  nick?: string;
+  channels?: string[];
+  password?: string;
 }
 
 // Deprecated alias

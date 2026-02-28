@@ -56,7 +56,7 @@ async function checkLLMConnection(config: any): Promise<boolean> {
   return true;
 }
 
-export async function startCommand(interactive: boolean = false): Promise<void> {
+export async function startCommand(interactive: boolean = false, profile?: string): Promise<void> {
   // Check if config exists
   try {
     await fs.stat(CONFIG_FILE);
@@ -65,7 +65,10 @@ export async function startCommand(interactive: boolean = false): Promise<void> 
     console.warn('   Run `voltclaw configure` to set up your environment.\n');
   }
 
-  const config = await loadConfig();
+  let config = await loadConfig();
+  if (profile && config.profiles?.[profile]) {
+    config = { ...config, ...config.profiles[profile] };
+  }
   const keys = await loadOrGenerateKeys();
 
   console.log('Starting VoltClaw agent...');

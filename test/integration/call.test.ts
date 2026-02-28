@@ -84,6 +84,7 @@ describe('Call Integration', () => {
             llm: mockLLM,
             channel: new MockChannel(),
             persistence: new FileStore({ path: storePath }),
+            rlm: { enabled: true },
             tools: [
                 createCallTool({
                     onCall: async () => ({}), // Handled by agent
@@ -157,6 +158,7 @@ describe('Call Integration', () => {
             llm: mockLLM,
             channel: new MockChannel(),
             persistence: new FileStore({ path: storePath }),
+            rlm: { enabled: true },
             tools: [
                 createCallTool({ onCall: async () => ({}), currentDepth: 0, maxDepth: 4 }),
                 createCodeExecTool()

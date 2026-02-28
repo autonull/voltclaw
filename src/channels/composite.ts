@@ -6,11 +6,11 @@ export class CompositeChannel implements Channel {
   private channels: Channel[];
 
   constructor(channels: Channel[]) {
-    if (channels.length === 0) {
+    if (channels.length === 0 || !channels[0]) {
       throw new Error('CompositeChannel requires at least one channel');
     }
     this.channels = channels;
-    this.identity = channels[0]!.identity;
+    this.identity = channels[0].identity;
   }
 
   async start(): Promise<void> {
@@ -24,9 +24,9 @@ export class CompositeChannel implements Channel {
   async send(to: string, content: string): Promise<void> {
     const match = to.match(/^([^:]+):(.+)$/);
 
-    if (match) {
-      const type = match[1]!;
-      const id = match[2]!;
+    if (match && match[1] != null && match[2] != null) {
+      const type = match[1];
+      const id = match[2];
 
       const channel = this.channels.find(c => c.type === type);
 
@@ -36,7 +36,9 @@ export class CompositeChannel implements Channel {
       }
     }
 
-    await this.channels[0]!.send(to, content);
+    if (this.channels.length > 0 && this.channels[0]) {
+      await this.channels[0].send(to, content);
+    }
   }
 
   subscribe(handler: MessageHandler): () => void {

@@ -8,6 +8,7 @@ export interface TestHarnessConfig {
   llm?: MockLLMConfig | MockLLM;
   relayPort?: number;
   call?: VoltClawAgentOptions['call'];
+  rlm?: VoltClawAgentOptions['rlm'];
 }
 
 export class TestHarness {
@@ -41,6 +42,7 @@ export class TestHarness {
         maxCalls: 5,
         budgetUSD: 0.50
       },
+      rlm: config.rlm,
       tools: [
         {
           name: 'get_time',

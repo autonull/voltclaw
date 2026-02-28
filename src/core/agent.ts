@@ -6,6 +6,7 @@ import { NostrClient } from '../channels/nostr/index.js';
 import { TelegramChannel } from '../channels/telegram.js';
 import { DiscordChannel } from '../channels/discord.js';
 import { StdioChannel } from '../channels/stdio.js';
+import { IrcChannel } from '../channels/irc.js';
 import { CompositeChannel } from '../channels/composite.js';
 import { FileStore } from '../memory/index.js';
 import { SQLiteStore } from '../memory/sqlite.js';
@@ -139,6 +140,8 @@ export class VoltClawAgent {
   private transportUnsubscribe?: Unsubscribe;
   private pruneTimer?: ReturnType<typeof setInterval>;
   private systemPromptTemplate?: string;
+  private readonly rlmEnabled: boolean;
+  private readonly lcmEnabled: boolean;
 
   constructor(options: VoltClawAgentOptions = {}) {
     this.llm = this.resolveLLM(options.llm);
@@ -184,13 +187,17 @@ export class VoltClawAgent {
         this.auditLog = new FileAuditLog(options.audit.path);
     }
 
+    this.rlmEnabled = options.rlm?.enabled ?? false;
+    this.lcmEnabled = options.lcm?.enabled ?? false;
+
     this.memory = new MemoryManager(this.store, this.llm);
     this.graph = new GraphManager(this.store, this.llm);
     this.contextManager = new ContextManager(this.llm, {
       maxMessages: options.history?.contextWindowSize ?? this.maxHistory,
       preserveLast: options.history?.preserveLast ?? 20,
       memory: this.memory,
-      graph: this.graph
+      graph: this.graph,
+      lcmEnabled: this.lcmEnabled
     });
     this.selfTest = new SelfTestFramework(this);
     this.docs = new DocumentationManager(this);
@@ -219,7 +226,7 @@ export class VoltClawAgent {
     } else {
       this.registerTools(coreTools);
 
-      if (options.rlm) {
+      if (this.rlmEnabled) {
           const rlmConfig = {
               rlmTimeoutMs: options.call?.timeoutMs,
               ...options.rlm
@@ -324,6 +331,16 @@ export class VoltClawAgent {
       }
       if (config.type === 'stdio') {
         return new StdioChannel();
+      }
+      if (config.type === 'irc') {
+        if (!config.server || !config.nick) throw new ConfigurationError('IRC server and nick are required');
+        return new IrcChannel({
+          server: config.server,
+          nick: config.nick,
+          port: config.port,
+          channels: config.channels,
+          password: config.password
+        });
       }
     }
     throw new ConfigurationError('Invalid channel configuration');
@@ -735,7 +752,7 @@ export class VoltClawAgent {
         await this.handleSubtask(subSession, parsed, from);
       } else if (parsed?.type === 'subtask_result') {
         // Resolve the session that initiated the task using parentPubkey if available
-        let targetSession = session;
+        const targetSession = session;
         if (parsed.parentPubkey) {
             const pKey = parsed.parentPubkey as string;
             const isSelfParent = pKey === this.channel.identity.publicKey;
@@ -881,8 +898,8 @@ Parent context: ${contextSummary}${contextInstruction}${schemaInstruction}${must
     try {
       let result = await this.runAgentLoop(session, messages, 'self', depth);
 
-      // Transparently offload large results to memory
-      if (result.length > this.largeResultThreshold && this.memory) {
+      // Transparently offload large results to memory (if LCM is enabled)
+      if (this.lcmEnabled && result.length > this.largeResultThreshold && this.memory) {
           try {
             const memId = await this.memory.storeMemory(
                 result,
@@ -1071,6 +1088,11 @@ Parent context: ${contextSummary}${contextInstruction}${schemaInstruction}${must
     session: Session,
     from: string
   ): Promise<ToolCallResult> {
+    if (!this.rlmEnabled) {
+      this.logger.warn('Attempted to use call tool while RLM is disabled.');
+      return { error: 'RLM is disabled. The call tool cannot be used.' };
+    }
+
     const task = args.task as string;
     const summary = args.summary as string | undefined;
     const schema = args.schema as Record<string, unknown> | string | undefined;
@@ -1135,6 +1157,11 @@ Parent context: ${contextSummary}${contextInstruction}${schemaInstruction}${must
     session: Session,
     from: string
   ): Promise<ToolCallResult> {
+    if (!this.rlmEnabled) {
+      this.logger.warn('Attempted to use call_parallel tool while RLM is disabled.');
+      return { error: 'RLM is disabled. The call_parallel tool cannot be used.' };
+    }
+
     const tasks = args.tasks as Array<{ task: string; summary?: string; schema?: Record<string, unknown> }>;
 
     if (!Array.isArray(tasks) || tasks.length === 0) {
@@ -1277,7 +1304,7 @@ RLM ENVIRONMENT:
         return tool && (tool.maxDepth ?? Infinity) >= depth;
       });
     
-    if (depth < this.maxDepth) {
+    if (this.rlmEnabled && depth < this.maxDepth) {
       toolNames.push('call');
     }
     
@@ -1371,7 +1398,7 @@ You are persistent, efficient, and recursive.`;
         .filter(([_, tool]) => (tool.maxDepth ?? Infinity) >= depth)
         .map(([name, tool]) => ({ name, description: tool.description, parameters: tool.parameters }));
     
-    if (depth < this.maxDepth) {
+    if (this.rlmEnabled && depth < this.maxDepth) {
       definitions.push({
         name: 'call',
         description: 'Call a child agent to handle a sub-task. Use for complex tasks that can be parallelized or decomposed.',

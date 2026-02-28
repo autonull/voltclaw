@@ -68,7 +68,7 @@ export class NostrClient implements Channel {
   private isStarted = false;
 
   constructor(options: NostrClientOptions) {
-    if (options.privateKey) {
+    if (options.privateKey != null && options.privateKey.length > 0) {
       this.secretKey = decodePrivateKey(options.privateKey);
     } else {
       this.secretKey = generateSecretKey();
@@ -214,7 +214,10 @@ export class NostrClient implements Channel {
     if (!this.eventHandlers.has(event)) {
       this.eventHandlers.set(event, new Set());
     }
-    this.eventHandlers.get(event)!.add(handler);
+    const handlers = this.eventHandlers.get(event);
+    if (handlers) {
+      handlers.add(handler);
+    }
   }
 
   private emit(event: string, ...args: unknown[]): void {
