@@ -25,7 +25,7 @@ describe('ContextManager', () => {
   });
 
   it('should summarize older messages if count > maxMessages', async () => {
-    const manager = new ContextManager(mockLLM, { maxMessages: 4, preserveLast: 2 });
+    const manager = new ContextManager(mockLLM, { maxMessages: 4, preserveLast: 2, lcmEnabled: true });
     // Total 6 messages (1 system + 5 chat)
     const messages: ChatMessage[] = [
       { role: 'system', content: 'sys' },

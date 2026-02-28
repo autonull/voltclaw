@@ -7,6 +7,7 @@ export interface ContextManagerOptions {
   preserveLast?: number;
   memory?: MemoryManager;
   graph?: GraphManager;
+  lcmEnabled?: boolean;
 }
 
 export class ContextManager {
@@ -15,6 +16,7 @@ export class ContextManager {
   private readonly preserveLast: number;
   private readonly memory?: MemoryManager;
   private readonly graph?: GraphManager;
+  private readonly lcmEnabled: boolean;
 
   constructor(llm: LLMProvider, options: ContextManagerOptions = {}) {
     this.llm = llm;
@@ -22,6 +24,7 @@ export class ContextManager {
     this.preserveLast = options.preserveLast ?? 20;
     this.memory = options.memory;
     this.graph = options.graph;
+    this.lcmEnabled = options.lcmEnabled ?? false;
   }
 
   async manageContext(messages: ChatMessage[]): Promise<ChatMessage[]> {
@@ -37,14 +40,6 @@ export class ContextManager {
       return messages;
     }
 
-    // We only summarize if we have enough messages to make it worthwhile
-    // e.g., if maxMessages=5, preserveLast=2, total=6 (non-system)
-    // toSummarize = 6 - 2 = 4 messages.
-
-    // Wait, the check above (nonSystemMessages.length <= this.maxMessages) handles the threshold.
-    // If maxMessages=5 and we have 5 non-system messages, we return.
-    // If we have 6, we summarize.
-
     const toSummarize = nonSystemMessages.slice(0, nonSystemMessages.length - this.preserveLast);
     const toKeep = nonSystemMessages.slice(nonSystemMessages.length - this.preserveLast);
 
@@ -52,7 +47,12 @@ export class ContextManager {
       return messages;
     }
 
-    // Offload to long-term memory/graph before summarizing
+    if (!this.lcmEnabled) {
+      // If LCM is disabled, simply truncate the older messages (lossy context)
+      return [...systemMessages, ...toKeep];
+    }
+
+    // LCM Enabled: Offload to long-term memory/graph before summarizing
     const textToOffload = toSummarize
       .map(m => `${m.role.toUpperCase()}: ${m.content || '[tool call]'}`)
       .join('\n');

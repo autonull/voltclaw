@@ -8,13 +8,26 @@ export const CONFIG_FILE = path.join(VOLTCLAW_DIR, 'config.json');
 export const KEYS_FILE = path.join(VOLTCLAW_DIR, 'keys.json');
 
 export interface ChannelConfig {
-  type: 'nostr' | 'telegram' | 'discord' | 'stdio';
+  type: 'nostr' | 'telegram' | 'discord' | 'stdio' | 'irc';
   token?: string;
   relays?: string[];
   privateKey?: string;
+  server?: string;
+  port?: number;
+  nick?: string;
+  channels?: string[];
+  password?: string;
 }
 
 export interface CLIConfig {
+  rlm?: {
+    enabled: boolean;
+  };
+  lcm?: {
+    enabled: boolean;
+    compressionLevel?: string;
+  };
+  profiles?: Record<string, Partial<CLIConfig>>;
   channels: ChannelConfig[];
   llm: {
     provider: 'ollama' | 'openai' | 'anthropic';
@@ -50,6 +63,14 @@ export interface CLIConfig {
 }
 
 const defaultConfig: CLIConfig = {
+  rlm: {
+    enabled: false
+  },
+  lcm: {
+    enabled: false,
+    compressionLevel: 'medium'
+  },
+  profiles: {},
   channels: [
     {
       type: 'nostr',

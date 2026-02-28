@@ -78,8 +78,8 @@ async function getPage(): Promise<Page> {
 }
 
 export const browserNavigateTool: Tool = {
-  name: 'browser_navigate',
-  description: 'Navigate the browser to a URL',
+  name: 'browse_page',
+  description: 'Navigate the browser to a URL and wait for it to load. Can be used as browser_navigate.',
   parameters: {
     type: 'object',
     properties: {
@@ -101,8 +101,8 @@ export const browserNavigateTool: Tool = {
 };
 
 export const browserClickTool: Tool = {
-  name: 'browser_click',
-  description: 'Click an element on the current page',
+  name: 'click_element',
+  description: 'Click an element on the current page. Can be used as browser_click.',
   parameters: {
     type: 'object',
     properties: {
@@ -146,8 +146,8 @@ export const browserTypeTool: Tool = {
 };
 
 export const browserExtractTool: Tool = {
-  name: 'browser_extract',
-  description: 'Extract text or attribute from an element',
+  name: 'scrape_content',
+  description: 'Extract text or attribute from an element. Can be used as browser_extract.',
   parameters: {
     type: 'object',
     properties: {
@@ -359,9 +359,12 @@ export const browserLoginTool: Tool = {
 export const createBrowserTools = (): Tool[] => [
   browserLoginTool,
   browserNavigateTool,
+  { ...browserNavigateTool, name: 'browser_navigate' },
   browserClickTool,
+  { ...browserClickTool, name: 'browser_click' },
   browserTypeTool,
   browserExtractTool,
+  { ...browserExtractTool, name: 'browser_extract' },
   browserScreenshotTool,
   browserScrollTool,
   browserWaitTool,

@@ -66,14 +66,18 @@ Options:
   --interactive       Enable interactive tool approval
   --verbose           Enable verbose logging
   --json              Output in JSON format (where applicable)
+  --profile <name>    Use a specific configuration profile
 `);
 }
 
 async function oneShotQuery(
   query: string,
-  options: { recursive: boolean; verbose: boolean; debug: boolean; interactive: boolean }
+  options: { recursive: boolean; verbose: boolean; debug: boolean; interactive: boolean; profile?: string }
 ): Promise<void> {
-  const config = await loadConfig();
+  let config = await loadConfig();
+  if (options.profile && config.profiles?.[options.profile]) {
+    config = { ...config, ...config.profiles[options.profile] };
+  }
   const keys = await loadOrGenerateKeys();
   const llm = createLLMProvider(config.llm);
 
@@ -137,9 +141,11 @@ async function run(args: string[]): Promise<void> {
   let debug = false;
   let interactive = false;
   let json = false;
+  let profile: string | undefined;
   const positional: string[] = [];
 
-  for (const arg of args) {
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
     if (arg === '--recursive' || arg === '-r') {
       recursive = true;
     } else if (arg === '--verbose' || arg === '-v') {
@@ -150,13 +156,15 @@ async function run(args: string[]): Promise<void> {
       interactive = true;
     } else if (arg === '--json') {
       json = true;
+    } else if (arg === '--profile') {
+      profile = args[++i] || '';
     } else if (arg === '--help' || arg === '-h') {
       printHelp();
       return;
     } else if (arg === '--version') {
       console.log('VoltClaw v1.0.0');
       return;
-    } else if (!arg.startsWith('-')) {
+    } else if (arg && !arg.startsWith('-')) {
       positional.push(arg);
     }
   }
@@ -171,10 +179,10 @@ async function run(args: string[]): Promise<void> {
   // Handle known commands
   switch (command) {
     case 'start':
-      await startCommand(false);
+      await startCommand(false, profile);
       break;
     case 'repl':
-      await startCommand(true);
+      await startCommand(true, profile);
       break;
     case 'dm': {
       if (positional.length < 3) {
@@ -225,7 +233,7 @@ async function run(args: string[]): Promise<void> {
     default:
       // Treat as one-shot query
       const query = positional.join(' ');
-      await oneShotQuery(query, { recursive, verbose, debug, interactive });
+      await oneShotQuery(query, { recursive, verbose, debug, interactive, profile });
       break;
   }
 }

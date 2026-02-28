@@ -40,7 +40,7 @@ test('Integration: Sub-agent receives full RLM prompt', async () => {
         path: storePath
     } as any,
     // Enable RLM to auto-register code_exec
-    rlm: { rlmTimeoutMs: 1000 }
+    rlm: { enabled: true, rlmTimeoutMs: 1000 }
   });
 
   await agent.start();

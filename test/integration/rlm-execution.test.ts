@@ -76,7 +76,7 @@ test('Integration: RLM shared primitives execution', async () => {
         path: storePath
     } as any,
     tools: [codeExecTool],
-    rlm: { rlmTimeoutMs: 5000 }
+    rlm: { enabled: true, rlmTimeoutMs: 5000 }
   });
 
   await agent.start();
@@ -148,7 +148,7 @@ test('Integration: RLM map execution', async () => {
         path: storePath
     } as any,
     tools: [codeExecTool],
-    rlm: { rlmTimeoutMs: 5000 }
+    rlm: { enabled: true, rlmTimeoutMs: 5000 }
   });
 
   await agent.start();

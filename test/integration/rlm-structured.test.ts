@@ -92,6 +92,7 @@ describe('RLM Structured Integration', () => {
             channel: new MockChannel(),
             persistence: new FileStore({ path: storePath }),
             tools: [codeExecTool],
+            rlm: { enabled: true },
             call: {
                 maxDepth: 4,
                 timeoutMs: 5000
