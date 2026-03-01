@@ -1,4 +1,4 @@
-import { type LLMProvider, type LLMConfig } from '../../core/index.js';
+import { type LLMProvider } from '../../core/index.js';
 import { OllamaProvider, OpenAIProvider, AnthropicProvider } from '../../llm/index.js';
 import { NostrClient } from '../../channels/nostr/index.js';
 import { loadConfig, loadOrGenerateKeys, type CLIConfig } from '../config.js';
@@ -60,11 +60,11 @@ async function checkLLM(config: CLIConfig['llm']): Promise<HealthCheck> {
   }
 }
 
-async function checkChannel(config: any): Promise<HealthCheck> {
+async function checkChannel(config: CLIConfig): Promise<HealthCheck> {
   // Check first Nostr channel found
-  const nostrConfig = config.channels?.find((c: any) => c.type === 'nostr');
+  const nostrConfig = config.channels?.find((c: { type: string; relays?: string[] }) => c.type === 'nostr');
 
-  if (!nostrConfig) {
+  if (nostrConfig === undefined) {
      return {
          name: 'Channel',
          healthy: true,
@@ -72,7 +72,7 @@ async function checkChannel(config: any): Promise<HealthCheck> {
      };
   }
 
-  const relays = nostrConfig.relays || ['wss://relay.damus.io'];
+  const relays = nostrConfig.relays ?? ['wss://relay.damus.io'];
 
   try {
     const keys = await loadOrGenerateKeys();
@@ -102,7 +102,7 @@ async function checkStorage(): Promise<HealthCheck> {
     await store.load?.();
     const all = store.getAll();
     // Check if getAll returned undefined or null
-    if (!all) {
+    if (all === undefined || all === null) {
         throw new Error('getAll returned null/undefined');
     }
     return {

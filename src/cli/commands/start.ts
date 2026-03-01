@@ -14,7 +14,7 @@ import fs from 'fs/promises';
 // Ideally these would be shared but for now we duplicate or refactor CLI logic later.
 // I will create a config.ts first to share these.
 
-function createLLMProvider(config: any): LLMProvider {
+function createLLMProvider(config: { provider: string; model: string; baseUrl?: string; apiKey?: string }): LLMProvider {
   switch (config.provider) {
     case 'ollama':
       return new OllamaProvider({
@@ -36,15 +36,15 @@ function createLLMProvider(config: any): LLMProvider {
   }
 }
 
-async function checkLLMConnection(config: any): Promise<boolean> {
+async function checkLLMConnection(config: { provider: string; model: string; baseUrl?: string; apiKey?: string }): Promise<boolean> {
   if (config.provider === 'ollama') {
-    const baseUrl = config.baseUrl || 'http://localhost:11434';
+    const baseUrl = config.baseUrl !== undefined && config.baseUrl !== '' ? config.baseUrl : 'http://localhost:11434';
     try {
       // Simple ping to Ollama version endpoint
       const res = await fetch(`${baseUrl}/api/version`);
       if (!res.ok) throw new Error('Not OK');
       return true;
-    } catch (e) {
+    } catch (_e) {
       console.error(`\n❌ Error: Could not connect to Ollama at ${baseUrl}`);
       console.error('   Please ensure Ollama is running: `ollama serve`');
       console.error('   Or update your config with `voltclaw configure`\n');
@@ -66,7 +66,7 @@ export async function startCommand(interactive: boolean = false, profile?: strin
   }
 
   let config = await loadConfig();
-  if (profile && config.profiles?.[profile]) {
+  if (profile !== undefined && profile !== '' && config.profiles?.[profile] !== undefined) {
     config = { ...config, ...config.profiles[profile] };
   }
   const keys = await loadOrGenerateKeys();
@@ -81,8 +81,8 @@ export async function startCommand(interactive: boolean = false, profile?: strin
   const llm = createLLMProvider(config.llm);
 
   // Use configured channels, injecting identity keys where needed
-  const channels = (config.channels || [{ type: 'nostr' }]).map(c => {
-    if (c.type === 'nostr' && !c.privateKey) {
+  const channels = (config.channels !== undefined && config.channels.length > 0 ? config.channels : [{ type: 'nostr' as const }]).map(c => {
+    if (c.type === 'nostr' && c.privateKey === undefined) {
       return { ...c, privateKey: keys.secretKey };
     }
     // Stdio channel is handled by agent's resolveChannel
@@ -111,17 +111,17 @@ export async function startCommand(interactive: boolean = false, profile?: strin
     plugins: config.plugins,
     tools,
     hooks: {
-      onMessage: async (ctx: MessageContext) => {
+      onMessage: async (ctx: MessageContext): Promise<void> => {
         if (!interactive) {
           console.log(`[${new Date().toISOString()}] Message from ${ctx.from.slice(0, 8)}: ${ctx.content.slice(0, 100)}...`);
         }
       },
-      onReply: async (ctx: ReplyContext) => {
+      onReply: async (ctx: ReplyContext): Promise<void> => {
         if (!interactive) {
           console.log(`[${new Date().toISOString()}] Reply to ${ctx.to.slice(0, 8)}: ${ctx.content.slice(0, 100)}...`);
         }
       },
-      onError: async (ctx: ErrorContext) => {
+      onError: async (ctx: ErrorContext): Promise<void> => {
         console.error(`[${new Date().toISOString()}] Error:`, ctx.error.message);
       },
       onToolApproval: interactive ? async (tool, args) => {
