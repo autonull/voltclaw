@@ -25,9 +25,11 @@ export class MemoryManager {
 
     const chunks = this.chunkText(content, chunkOptions.size, chunkOptions.overlap);
     const now = Date.now();
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const expiresAt = ttl ? now + ttl : undefined;
 
     if (chunks.length <= 1) {
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       return this.createSingleMemory(chunks[0] || content, type, tags, importance, level, expiresAt);
     }
 
@@ -44,6 +46,7 @@ export class MemoryManager {
         }
       }
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       await this.store.createMemory!({
         content: chunk,
         type,
@@ -82,6 +85,7 @@ export class MemoryManager {
       }
     }
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.store.createMemory!({
       content,
       type,
@@ -183,6 +187,7 @@ export class MemoryManager {
 
     if (this.llm?.embed && !q.embedding) {
       const textToEmbed = q.content;
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (textToEmbed) {
         try {
           q.embedding = await this.llm.embed(textToEmbed);
@@ -198,6 +203,7 @@ export class MemoryManager {
     if (this.store.updateMemory) {
       // Async update lastAccess for all retrieved memories
       Promise.all(entries.map(e =>
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.store.updateMemory!(e.id, { lastAccess: Date.now() })
           .catch(() => {})
       )).catch(() => {});

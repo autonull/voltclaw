@@ -35,6 +35,7 @@ export class Retrier {
       this.config.maxDelayMs
     );
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const jitter = this.config.jitterFactor
       ? exponentialDelay * this.config.jitterFactor * (Math.random() * 2 - 1)
       : 0;

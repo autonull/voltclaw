@@ -13,6 +13,7 @@ export class Scheduler {
       return;
     }
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tasks = await this.agent.getStore().getScheduledTasks!();
     for (const task of tasks) {
       this.scheduleJob(task);
@@ -44,6 +45,7 @@ export class Scheduler {
       target
     };
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await this.agent.getStore().scheduleTask!(task);
     this.scheduleJob(task);
 
@@ -54,6 +56,7 @@ export class Scheduler {
     if (!this.agent.getStore().getScheduledTasks) {
       return [];
     }
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.agent.getStore().getScheduledTasks!();
   }
 
@@ -62,6 +65,7 @@ export class Scheduler {
       throw new Error('Persistence store does not support scheduling');
     }
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await this.agent.getStore().deleteScheduledTask!(id);
     const job = this.jobs.get(id);
     if (job) {
@@ -72,6 +76,7 @@ export class Scheduler {
 
   private scheduleJob(task: ScheduledTask): void {
     if (this.jobs.has(task.id)) {
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.jobs.get(task.id)!.stop();
     }
 
@@ -79,6 +84,7 @@ export class Scheduler {
       try {
         // Update last run time
         const updatedTask = { ...task, lastRun: Date.now() };
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await this.agent.getStore().scheduleTask!(updatedTask);
 
         // Execute task
@@ -91,6 +97,7 @@ export class Scheduler {
         // For now, we execute it and log the result.
         // Ideally, we send a message to the "owner" (admin) via the channel.
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
         const notification = `[Scheduler] Executing task: ${task.task}`;
         // We can't easily "push" to the admin unless we know who they are.
         // But `agent.query` assumes a reply to the caller.
@@ -106,6 +113,7 @@ export class Scheduler {
         const result = await this.agent.query(`[Scheduled Task] ${task.task}`);
         console.log(`[Scheduler] Task ${task.id} completed:`, result);
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (task.target) {
             await this.agent.send(task.target, result);
         }

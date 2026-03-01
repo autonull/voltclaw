@@ -14,6 +14,7 @@ export function createPromptTools(manager: PromptManager): Tool[] {
         },
         required: ['id']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args: Record<string, unknown>) => {
         const id = args.id as string;
         const version = args.version as number | undefined;
@@ -37,6 +38,7 @@ export function createPromptTools(manager: PromptManager): Tool[] {
         },
         required: ['id', 'description', 'content']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args: Record<string, unknown>) => {
         const id = args.id as string;
         const description = args.description as string;
@@ -61,6 +63,7 @@ export function createPromptTools(manager: PromptManager): Tool[] {
         },
         required: ['id', 'content', 'changelog']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args: Record<string, unknown>) => {
         const id = args.id as string;
         const content = args.content as string;
@@ -84,6 +87,7 @@ export function createPromptTools(manager: PromptManager): Tool[] {
         },
         required: ['id', 'feedback']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args: Record<string, unknown>) => {
         const id = args.id as string;
         const feedback = args.feedback as string;

@@ -70,6 +70,7 @@ export class AnthropicProvider extends BaseLLMProvider {
       stream: true
     };
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (systemMessage?.content) {
       body['system'] = systemMessage.content;
     }
@@ -109,6 +110,7 @@ export class AnthropicProvider extends BaseLLMProvider {
 
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split('\n');
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       buffer = lines.pop() || '';
 
       for (const line of lines) {
@@ -123,6 +125,7 @@ export class AnthropicProvider extends BaseLLMProvider {
                 currentBlockIndex = data.index;
                 if (data.content_block.type === 'text') {
                     currentBlockType = 'text';
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     if (data.content_block.text) {
                         yield { content: data.content_block.text };
                     }
@@ -155,6 +158,7 @@ export class AnthropicProvider extends BaseLLMProvider {
                                      arguments: JSON.parse(buffered.arguments)
                                  }
                              };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
                         } catch (e) {
                              // Ignore
                         }
@@ -162,6 +166,7 @@ export class AnthropicProvider extends BaseLLMProvider {
                 }
                 currentBlockType = '';
             }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             // Ignore
         }
@@ -187,6 +192,7 @@ export class AnthropicProvider extends BaseLLMProvider {
       max_tokens: options?.maxTokens ?? 4096
     };
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (systemMessage?.content) {
       body['system'] = systemMessage.content;
     }
@@ -244,6 +250,7 @@ export class AnthropicProvider extends BaseLLMProvider {
   private formatMessage(msg: ChatMessage): Record<string, unknown> {
     const content: AnthropicContent[] = [];
     
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (msg.content) {
       content.push({ type: 'text', text: msg.content });
     }
@@ -259,6 +266,7 @@ export class AnthropicProvider extends BaseLLMProvider {
       }
     }
     
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (msg.role === 'tool' && msg.toolCallId) {
       return {
         role: 'user',

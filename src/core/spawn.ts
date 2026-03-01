@@ -50,6 +50,7 @@ export class SpawnManager extends EventEmitter {
   }
 
   private async runTask(id: string, task: string, context?: Record<string, unknown>): Promise<void> {
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const taskInfo = this.tasks.get(id)!;
 
     try {

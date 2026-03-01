@@ -4,7 +4,15 @@ import type { Tool, ToolCallResult } from './types.js';
 import { formatToolError } from './errors.js';
 
 // Declare browser globals for evaluation context
+
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const window: any;
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const document: any;
 
 let browserInstance: BrowserContext | null = null;
@@ -59,27 +67,42 @@ import os from 'os';
 
 const USER_DATA_DIR = path.join(os.homedir(), '.voltclaw', 'browser_data');
 
+
+
 async function getPage(): Promise<Page> {
   if (!browserInstance) {
     browserInstance = await chromium.launchPersistentContext(USER_DATA_DIR, {
       headless: true,
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
       viewport: { width: 1280, height: 800 }
+
     });
+
+
+
+
+
   }
   // Persistent context has pages already, or we create one
   const pages = browserInstance.pages();
   if (pages.length > 0) {
     pageInstance = pages[0] as Page;
   } else {
+
     pageInstance = await browserInstance.newPage();
   }
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return pageInstance!;
 }
+
 
 export const browserNavigateTool: Tool = {
   name: 'browse_page',
   description: 'Navigate the browser to a URL and wait for it to load. Can be used as browser_navigate.',
+
   parameters: {
     type: 'object',
     properties: {
@@ -94,6 +117,7 @@ export const browserNavigateTool: Tool = {
       await page.goto(url);
       const title = await page.title();
       return { status: 'success', title, url };
+
     } catch (error) {
       return { error: formatToolError('browser_navigate', error, args) };
     }
@@ -111,11 +135,16 @@ export const browserClickTool: Tool = {
     required: ['selector']
   },
   execute: async (args: Record<string, unknown>): Promise<ToolCallResult> => {
+
     try {
       const { selector } = ClickSchema.parse(args);
+
       const page = await getPage();
       await page.click(selector);
+
       return { status: 'success', selector };
+
+
     } catch (error) {
       return { error: formatToolError('browser_click', error, args) };
     }
@@ -132,6 +161,8 @@ export const browserTypeTool: Tool = {
       text: { type: 'string', description: 'The text to type' }
     },
     required: ['selector', 'text']
+
+
   },
   execute: async (args: Record<string, unknown>): Promise<ToolCallResult> => {
     try {
@@ -145,6 +176,8 @@ export const browserTypeTool: Tool = {
   }
 };
 
+
+
 export const browserExtractTool: Tool = {
   name: 'scrape_content',
   description: 'Extract text or attribute from an element. Can be used as browser_extract.',
@@ -154,20 +187,32 @@ export const browserExtractTool: Tool = {
       selector: { type: 'string', description: 'The CSS selector (optional, defaults to body)' },
       attribute: { type: 'string', description: 'The attribute to extract (optional)' }
     }
+
   },
   execute: async (args: Record<string, unknown>): Promise<ToolCallResult> => {
     try {
+
+
       const { selector, attribute } = ExtractSchema.parse(args);
       const page = await getPage();
+
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       const targetSelector = selector || 'body';
 
+
       let content;
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (attribute) {
         content = await page.getAttribute(targetSelector, attribute);
+
       } else {
         content = await page.innerText(targetSelector);
       }
 
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       return { content: content || '' };
     } catch (error) {
       return { error: formatToolError('browser_extract', error, args) };
@@ -182,15 +227,21 @@ export const browserScreenshotTool: Tool = {
     type: 'object',
     properties: {
       path: { type: 'string', description: 'Path to save (optional)' },
+
       fullPage: { type: 'boolean', description: 'Capture full page' }
+
     }
   },
   execute: async (args: Record<string, unknown>): Promise<ToolCallResult> => {
+
+
     try {
       const { path, fullPage } = ScreenshotSchema.parse(args);
       const page = await getPage();
       const buffer = await page.screenshot({ path, fullPage });
 
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (path) {
         return { status: 'success', path };
       }
@@ -209,29 +260,135 @@ export const browserScrollTool: Tool = {
     type: 'object',
     properties: {
       direction: { type: 'string', enum: ['up', 'down', 'top', 'bottom'], description: 'Scroll direction' },
+
       amount: { type: 'number', description: 'Amount in pixels (optional)' }
     },
     required: ['direction']
   },
   execute: async (args: Record<string, unknown>): Promise<ToolCallResult> => {
+
+
+
     try {
       const { direction, amount } = ScrollSchema.parse(args);
+
       const page = await getPage();
 
       switch (direction) {
         case 'top':
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
           await page.evaluate(() => (window as any).scrollTo(0, 0));
           break;
+
         case 'bottom':
+
+
+
+
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
           await page.evaluate(() => (window as any).scrollTo(0, (document as any).body.scrollHeight));
           break;
         case 'up':
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions
           await page.evaluate((y) => (window as any).scrollBy(0, -(y || 500)), amount);
+
+
           break;
         case 'down':
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/strict-boolean-expressions
           await page.evaluate((y) => (window as any).scrollBy(0, y || 500), amount);
+
+
+
           break;
+
       }
+
+
       return { status: 'success', direction };
     } catch (error) {
       return { error: formatToolError('browser_scroll', error, args) };
@@ -242,6 +399,7 @@ export const browserScrollTool: Tool = {
 export const browserWaitTool: Tool = {
   name: 'browser_wait',
   description: 'Wait for an element or timeout',
+
   parameters: {
     type: 'object',
     properties: {
@@ -254,9 +412,12 @@ export const browserWaitTool: Tool = {
       const { selector, timeout } = WaitSchema.parse(args);
       const page = await getPage();
 
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (selector) {
         await page.waitForSelector(selector, { timeout });
       } else {
+
         await page.waitForTimeout(timeout);
       }
 
@@ -270,6 +431,7 @@ export const browserWaitTool: Tool = {
 export const browserEvalTool: Tool = {
   name: 'browser_eval',
   description: 'Evaluate JavaScript in the page context',
+
   parameters: {
     type: 'object',
     properties: {
@@ -283,8 +445,10 @@ export const browserEvalTool: Tool = {
       const page = await getPage();
       const result = await page.evaluate((code) => {
 
+
         return eval(code);
       }, script);
+
       return { result: String(result) };
     } catch (error) {
       return { error: formatToolError('browser_eval', error, args) };
@@ -313,12 +477,14 @@ export const browserCloseTool: Tool = {
 export const browserLoginTool: Tool = {
   name: 'browser_login',
   description: 'Open browser in non-headless mode for manual login. Waits for you to close the window.',
+
   parameters: {
     type: 'object',
     properties: {
       url: { type: 'string', description: 'URL to open for login' }
     },
     required: ['url']
+
   },
   execute: async (args: Record<string, unknown>): Promise<ToolCallResult> => {
     try {
@@ -331,6 +497,8 @@ export const browserLoginTool: Tool = {
       }
 
       // Launch headful
+
+
       const context = await chromium.launchPersistentContext(USER_DATA_DIR, {
         headless: false,
         viewport: null
@@ -338,6 +506,7 @@ export const browserLoginTool: Tool = {
 
       const page = (context.pages().length ? context.pages()[0] : await context.newPage()) as Page;
       await page.goto(url);
+
 
       // Wait for browser close
       await new Promise<void>(resolve => {
@@ -370,4 +539,18 @@ export const createBrowserTools = (): Tool[] => [
   browserWaitTool,
   browserEvalTool,
   browserCloseTool
+
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+

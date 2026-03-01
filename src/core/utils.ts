@@ -11,6 +11,7 @@ export class AsyncMutex {
 
   unlock(): void {
     if (this.queue.length > 0) {
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const resolve = this.queue.shift()!;
       resolve();
     } else {

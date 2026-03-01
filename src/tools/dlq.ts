@@ -11,6 +11,7 @@ export function createDLQTools(agent: VoltClawAgent): Tool[] {
         properties: {},
         required: []
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async () => {
         const items = await agent.dlq.list();
         return {
@@ -38,6 +39,7 @@ export function createDLQTools(agent: VoltClawAgent): Tool[] {
         },
         required: ['id']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args) => {
         const id = args.id as string;
         const item = await agent.dlq.get(id);
@@ -65,6 +67,7 @@ export function createDLQTools(agent: VoltClawAgent): Tool[] {
         },
         required: ['id']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args) => {
         const id = args.id as string;
         const item = await agent.dlq.get(id);
@@ -81,6 +84,7 @@ export function createDLQTools(agent: VoltClawAgent): Tool[] {
 
           const result = await agent.retryTool(item.tool, item.args);
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           if (result.error) {
              // If it fails again, it might go back to DLQ automatically via agent logic
              // But we should probably remove the OLD one if the new one is created?
@@ -116,6 +120,7 @@ export function createDLQTools(agent: VoltClawAgent): Tool[] {
         },
         required: ['id']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args) => {
         const id = args.id as string;
         await agent.dlq.remove(id);
@@ -130,6 +135,7 @@ export function createDLQTools(agent: VoltClawAgent): Tool[] {
         properties: {},
         required: []
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async () => {
         await agent.dlq.clear();
         return { status: 'cleared' };

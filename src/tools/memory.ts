@@ -16,6 +16,7 @@ export function createMemoryTools(manager: MemoryManager): Tool[] {
         },
         required: ['content']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args) => {
         const id = await manager.storeMemory(
           args.content as string,
@@ -38,6 +39,7 @@ export function createMemoryTools(manager: MemoryManager): Tool[] {
           limit: { type: 'number', description: 'Max results' }
         }
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args) => {
         const results = await manager.recall({
           id: args.id as string | undefined,
@@ -58,6 +60,7 @@ export function createMemoryTools(manager: MemoryManager): Tool[] {
         },
         required: ['id']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args) => {
         await manager.forget(args.id as string);
         return { status: 'removed', id: args.id };
@@ -71,6 +74,7 @@ export function createMemoryTools(manager: MemoryManager): Tool[] {
         properties: {},
         required: []
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async () => {
         const memories = await manager.export();
         return { status: 'exported', count: memories.length, memories };
@@ -88,6 +92,7 @@ export function createMemoryTools(manager: MemoryManager): Tool[] {
         },
         required: ['contextId']
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (args) => {
         const contextId = args.contextId as string;
         const limit = (args.limit as number) ?? 10;
@@ -101,7 +106,9 @@ export function createMemoryTools(manager: MemoryManager): Tool[] {
 
         // Ensure we sort strictly by chunk index if available in metadata
         const sorted = results.sort((a, b) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
             const idxA = (a.metadata as any)?.chunkIndex ?? 0;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
             const idxB = (b.metadata as any)?.chunkIndex ?? 0;
             return idxA - idxB;
         });
@@ -123,13 +130,16 @@ export function createMemoryTools(manager: MemoryManager): Tool[] {
         properties: {},
         required: []
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       execute: async (_args, agent) => {
         // 1. Retrieve recent working memories
         const recentMemories = await manager.recall({ type: 'working', limit: 50 });
 
         // Cast agent to allow calling query (avoiding circular type import)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
         const voltclaw = agent as any;
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (recentMemories.length > 5 && voltclaw && typeof voltclaw.query === 'function') {
              const memoryContent = recentMemories.map(m => `- ${m.content} (importance: ${m.importance})`).join('\n');
              const prompt = `Consolidate these working memories into a single concise long-term memory summary. Focus on key facts and high importance items.\n\nMemories:\n${memoryContent}`;

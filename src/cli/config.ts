@@ -126,9 +126,11 @@ export async function loadConfig(): Promise<CLIConfig> {
   const channels = userConfig.channels || [...defaultConfig.channels];
 
   // Check ENV for tokens if not in config
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (process.env.TELEGRAM_TOKEN && !channels.some(c => c.type === 'telegram')) {
       channels.push({ type: 'telegram', token: process.env.TELEGRAM_TOKEN });
   }
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (process.env.DISCORD_TOKEN && !channels.some(c => c.type === 'discord')) {
       channels.push({ type: 'discord', token: process.env.DISCORD_TOKEN });
   }

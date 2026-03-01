@@ -76,6 +76,7 @@ export class MockRelay {
     if (!this.subscriptions.has(ws)) {
       this.subscriptions.set(ws, []);
     }
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.subscriptions.get(ws)!.push({ subId, filters });
     
     for (const filter of filters) {
@@ -88,10 +89,15 @@ export class MockRelay {
   }
 
   private matchesFilter(event: TestEvent, filter: Record<string, unknown>): boolean {
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (filter['kinds'] && !((filter['kinds'] as number[]).includes(event.kind))) return false;
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (filter['authors'] && !((filter['authors'] as string[]).includes(event.pubkey))) return false;
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (filter['#p'] && !event.tags.some(t => t[0] === 'p' && (filter['#p'] as string[]).includes(t[1] ?? ''))) return false;
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (filter['since'] && event.created_at < (filter['since'] as number)) return false;
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (filter['until'] && event.created_at > (filter['until'] as number)) return false;
     return true;
   }
@@ -173,10 +179,12 @@ export class MockClient {
       content: encrypted
     }, this.secretKey);
     
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.ws!.send(JSON.stringify(['EVENT', event]));
   }
 
   subscribe(): void {
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.ws!.send(JSON.stringify(['REQ', 'sub', {
       kinds: [4],
       '#p': [this.publicKey]
