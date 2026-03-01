@@ -15,7 +15,7 @@ export function createSelfTestTool(framework: SelfTestFramework): Tool {
       },
       required: ['target']
     },
-    execute: async (args: Record<string, unknown>) => {
+    execute: async (args: Record<string, unknown>): Promise<{ result?: string; summary?: string; error?: string }> => {
       const target = args.target as string;
       try {
         const plan = await framework.generateTests(target);

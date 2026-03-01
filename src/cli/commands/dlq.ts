@@ -5,7 +5,7 @@ export async function dlqCommand(subcommand: string, id?: string): Promise<void>
   const config = await loadConfig();
   const dlqConfig = config.dlq;
 
-  if (!dlqConfig || dlqConfig.type !== 'file' || !dlqConfig.path) {
+  if (dlqConfig === undefined || dlqConfig.type !== 'file' || dlqConfig.path === undefined || dlqConfig.path === '') {
     console.error('DLQ is not configured or not file-based.');
     return;
   }
@@ -27,7 +27,7 @@ export async function dlqCommand(subcommand: string, id?: string): Promise<void>
       break;
     }
     case 'show': {
-      if (!id) {
+      if (id === undefined || id === '') {
         console.error('Usage: voltclaw dlq show <id>');
         return;
       }
@@ -40,7 +40,7 @@ export async function dlqCommand(subcommand: string, id?: string): Promise<void>
       break;
     }
     case 'delete': {
-      if (!id) {
+      if (id === undefined || id === '') {
         console.error('Usage: voltclaw dlq delete <id>');
         return;
       }

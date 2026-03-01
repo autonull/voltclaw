@@ -1,8 +1,5 @@
 import inquirer from 'inquirer';
 import { Workspace } from '../../core/workspace.js';
-import fs from 'fs/promises';
-import path from 'path';
-import { VOLTCLAW_DIR } from '../config.js';
 
 export async function onboardCommand(): Promise<void> {
   console.log('VoltClaw Onboarding - Design Your Agent Persona\n');

@@ -20,16 +20,16 @@ export async function sessionCommand(subcommand: string, arg?: string): Promise<
       console.log('----------------');
       for (const key of keys) {
         const session = all[key];
-        if (!session) continue;
+        if (session === undefined) continue;
         const msgCount = session.history.length;
-        const subtaskCount = Object.keys(session.subTasks || {}).length;
+        const subtaskCount = Object.keys(session.subTasks ?? {}).length;
         console.log(`- ${key}: ${msgCount} messages, ${subtaskCount} subtasks, cost: $${session.estCostUSD.toFixed(4)}`);
       }
       break;
     }
 
     case 'show': {
-      if (!arg) {
+      if (arg === undefined || arg === '') {
         console.error('Usage: voltclaw session show <session_id>');
         return;
       }
@@ -45,7 +45,7 @@ export async function sessionCommand(subcommand: string, arg?: string): Promise<
 
       for (const msg of session.history) {
         const role = msg.role.toUpperCase();
-        const content = msg.content ? msg.content.slice(0, 500) + (msg.content.length > 500 ? '...' : '') : '[no content]';
+        const content = msg.content !== undefined && msg.content !== null && msg.content !== '' ? msg.content.slice(0, 500) + (msg.content.length > 500 ? '...' : '') : '[no content]';
         console.log(`[${role}] ${content}`);
         if (msg.toolCalls) {
             for (const tc of msg.toolCalls) {

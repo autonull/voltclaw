@@ -47,10 +47,12 @@ export class StdioChannel implements Channel {
   }
 
   on(event: 'connected' | 'disconnected' | 'error', handler: EventHandler): void {
-    if (!this.eventHandlers.has(event)) {
-      this.eventHandlers.set(event, new Set());
+    const handlers = this.eventHandlers.get(event);
+    if (handlers) {
+      handlers.add(handler);
+    } else {
+      this.eventHandlers.set(event, new Set([handler]));
     }
-    this.eventHandlers.get(event)!.add(handler);
   }
 
   private emit(event: string, ...args: unknown[]): void {
@@ -61,7 +63,7 @@ export class StdioChannel implements Channel {
   }
 
   private async handleInput(line: string): Promise<void> {
-    if (!line.trim()) return;
+    if (line.trim() === '') return;
 
     // Treat stdin as a message from 'user'
     for (const handler of this.handlers) {
