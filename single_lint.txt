@@ -1,0 +1,175 @@
+
+> voltclaw@1.0.0 lint
+> eslint . src/core/self-test.ts
+
+
+/app/fix_one_file.cjs
+  0:0  error  Parsing error: /app/fix_one_file.cjs was not found by the project service. Consider either including it in the tsconfig.json or including it in allowDefaultProject
+
+/app/src/core/self-test.ts
+    3:15   error  'ToolDefinition' is defined but never used                                                         @typescript-eslint/no-unused-vars
+   56:32   error  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+   71:39   error  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+  127:17   error  Unexpected any value in conditional. An explicit comparison or type conversion is required         @typescript-eslint/strict-boolean-expressions
+  127:28   error  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+  132:36   error  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+  148:54   error  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly  @typescript-eslint/strict-boolean-expressions
+  150:18   error  Unexpected nullable boolean value in conditional. Please handle the nullish case explicitly        @typescript-eslint/strict-boolean-expressions
+  162:103  error  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly  @typescript-eslint/strict-boolean-expressions
+
+/app/src/memory/sqlite.ts
+   98:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  134:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  136:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  163:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  164:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  207:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  213:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  215:49  error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+  300:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  323:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  349:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  362:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  388:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  424:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  453:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  467:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  491:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  526:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  622:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  716:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  848:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  849:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  850:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+
+/app/src/tools/browser.ts
+   74:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   95:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+   99:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  135:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  138:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  158:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  159:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  219:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  292:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  303:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  305:68  error    Unexpected nullable number value in conditional. Please handle the nullish/zero/NaN cases explicitly                 @typescript-eslint/strict-boolean-expressions
+  335:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  337:66  error    Unexpected nullable number value in conditional. Please handle the nullish/zero/NaN cases explicitly                 @typescript-eslint/strict-boolean-expressions
+  339:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  372:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  403:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  432:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  462:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  494:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  504:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  505:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  506:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  507:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  508:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  509:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+
+/app/src/tools/code_exec.ts
+   71:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   73:57  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   73:71  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   98:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  134:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  137:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  153:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  154:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  156:52  error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+  156:94  error    Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly                    @typescript-eslint/strict-boolean-expressions
+  210:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  229:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  307:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  325:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  327:38  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  341:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  376:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  388:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  390:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  392:38  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  448:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  450:51  error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+  453:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  521:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  569:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  570:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  571:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  572:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  573:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  574:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+
+/app/src/tools/errors.ts
+   84:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   91:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   93:17  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  109:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  146:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  149:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  153:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  154:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  155:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  156:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  157:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  158:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  159:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  160:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  161:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  162:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  163:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  164:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  165:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  166:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  167:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  168:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  169:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+  170:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  171:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+
+/app/src/tools/rlm-helpers.ts
+    73:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+    94:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+    96:8    error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+   130:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   132:61   error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+   164:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+   165:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   195:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   197:32   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   197:56   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   221:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   281:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   283:32   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   283:56   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   330:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+   353:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   357:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   359:32   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   359:56   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   416:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   418:62   error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+   428:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/strict-boolean-expressions')
+   429:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   430:15   error    Unexpected any value in conditional. An explicit comparison or type conversion is required                           @typescript-eslint/strict-boolean-expressions
+   478:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   480:32   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   480:56   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   491:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   563:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   565:32   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   565:56   error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   646:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   648:86   error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+   731:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   733:77   error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+   847:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   849:104  error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+   943:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+   945:129  error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+  1059:1    warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/explicit-function-return-type')
+  1061:103  error    Missing return type on function                                                                                      @typescript-eslint/explicit-function-return-type
+
+✖ 154 problems (40 errors, 114 warnings)
+  0 errors and 114 warnings potentially fixable with the `--fix` option.

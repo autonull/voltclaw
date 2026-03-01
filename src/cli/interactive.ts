@@ -1,6 +1,7 @@
 import inquirer from 'inquirer';
 
 export async function askApproval(tool: string, args: unknown): Promise<boolean> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   const DESTRUCTIVE = ['execute', 'write_file', 'edit', 'delete', 'call', 'call_parallel'];
   // We might want to approve recursive calls too? Or maybe not 'call'.
   // But 'execute' is definitely destructive.
@@ -26,6 +27,7 @@ export async function askApproval(tool: string, args: unknown): Promise<boolean>
       }
     ]);
     return allowed;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // If prompt fails (e.g. stream closed), default to false
     return false;

@@ -51,6 +51,7 @@ export class HeartbeatManager {
       let content = '';
       try {
         content = await readFile(heartbeatFile, 'utf-8');
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         return;
       }

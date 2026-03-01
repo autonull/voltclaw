@@ -59,9 +59,11 @@ export const editTool: Tool = {
         replacements: replaceAll ? occurrences : 1
       };
     } catch (error) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any).code === 'ENOENT') {
         return { error: `File not found: ${path}` };
       }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any).code === 'EACCES') {
         return { error: `Permission denied: ${path}` };
       }

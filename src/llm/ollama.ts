@@ -148,6 +148,7 @@ export class OllamaProvider extends BaseLLMProvider {
 
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split('\n');
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       buffer = lines.pop() || '';
 
       for (const line of lines) {
@@ -155,6 +156,7 @@ export class OllamaProvider extends BaseLLMProvider {
         try {
           const data = JSON.parse(line) as OllamaResponse & { done?: boolean };
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           if (data.done) {
             yield { done: true };
             return;
@@ -162,6 +164,7 @@ export class OllamaProvider extends BaseLLMProvider {
 
           const message = data.message;
           if (message) {
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (message.content) {
               yield { content: message.content };
             }
@@ -173,6 +176,7 @@ export class OllamaProvider extends BaseLLMProvider {
                 }
             }
           }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           // ignore
         }

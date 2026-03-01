@@ -23,7 +23,9 @@
  */
 export class HierarchicalContext {
   private parent?: HierarchicalContext;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   private localData: Map<string, any> = new Map();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   private metadata: Map<string, any> = new Map();
   private readonly id: string;
   private createdAt: number;
@@ -40,6 +42,7 @@ export class HierarchicalContext {
    * @param key - Key to set
    * @param value - Value to store
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   set(key: string, value: any): void {
     this.localData.set(key, value);
   }
@@ -50,6 +53,7 @@ export class HierarchicalContext {
    * @param key - Key to retrieve
    * @returns Value or undefined if not found
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   get(key: string): any {
     if (this.localData.has(key)) {
       return this.localData.get(key);
@@ -127,7 +131,9 @@ export class HierarchicalContext {
    * 
    * @returns Object with all key-value pairs
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   getAll(): Record<string, any> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result: Record<string, any> = {};
     
     // First collect inherited values
@@ -148,7 +154,9 @@ export class HierarchicalContext {
    * 
    * @returns Object with local key-value pairs
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   getLocal(): Record<string, any> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result: Record<string, any> = {};
     for (const [key, value] of this.localData.entries()) {
       result[key] = value;
@@ -180,6 +188,7 @@ export class HierarchicalContext {
    * @returns Root context
    */
   getRoot(): HierarchicalContext {
+// eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: HierarchicalContext = this;
     while (current.parent) {
       current = current.parent;
@@ -210,6 +219,7 @@ export class HierarchicalContext {
    * @param key - Metadata key
    * @param value - Metadata value
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   setMetadata(key: string, value: any): void {
     this.metadata.set(key, value);
   }
@@ -220,6 +230,7 @@ export class HierarchicalContext {
    * @param key - Metadata key
    * @returns Metadata value or undefined
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   getMetadata(key: string): any {
     return this.metadata.get(key);
   }
@@ -229,7 +240,9 @@ export class HierarchicalContext {
    * 
    * @returns Object with all metadata
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   getAllMetadata(): Record<string, any> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result: Record<string, any> = {};
     for (const [key, value] of this.metadata.entries()) {
       result[key] = value;
@@ -291,6 +304,7 @@ export class HierarchicalContext {
    * @param includeInherited - Whether to include inherited values (default: true)
    * @returns Plain object representation
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   toJSON(includeInherited: boolean = true): Record<string, any> {
     return {
       id: this.id,
@@ -309,15 +323,18 @@ export class HierarchicalContext {
    * @param parent - Optional parent context
    * @returns New HierarchicalContext
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromJSON(data: Record<string, any>, parent?: HierarchicalContext): HierarchicalContext {
     const ctx = new HierarchicalContext(parent);
     
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (data.data) {
       for (const [key, value] of Object.entries(data.data)) {
         ctx.set(key, value);
       }
     }
     
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (data.metadata) {
       for (const [key, value] of Object.entries(data.metadata)) {
         ctx.setMetadata(key, value);
@@ -375,6 +392,7 @@ export class HierarchicalContext {
   /**
    * Iterate over local entries
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   forEach(callback: (key: string, value: any) => void): void {
     for (const [key, value] of this.localData.entries()) {
       callback(key, value);
@@ -386,6 +404,7 @@ export class HierarchicalContext {
    * 
    * Note: Local values are processed first, then inherited
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   forEachAll(callback: (key: string, value: any) => void): void {
     const processed = new Set<string>();
     

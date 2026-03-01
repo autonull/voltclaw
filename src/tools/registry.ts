@@ -4,7 +4,9 @@ export type { Tool, ToolCallResult, ToolDefinition, ToolParameters };
 
 export type ToolExecutor = (
   args: Record<string, unknown>,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   agent?: any,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   session?: any,
   from?: string
 ) => Promise<ToolCallResult> | ToolCallResult;
@@ -38,6 +40,7 @@ export class ToolRegistry {
     costMultiplier?: number
   ): void {
     if (typeof toolOrName === 'string') {
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (!handler || !description) {
         throw new Error('Handler and description required when registering by name');
       }

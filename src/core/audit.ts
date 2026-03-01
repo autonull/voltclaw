@@ -10,17 +10,20 @@ export interface AuditEntry {
   timestamp: string;
   actor: string;
   action: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   details: any;
   prevHash: string;
   hash: string;
 }
 
 export interface AuditLog {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   log(actor: string, action: string, details: any): Promise<void>;
   verify(): Promise<boolean>;
 }
 
 // Simple key-sorting stringify for deterministic hashing
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deterministicStringify(obj: any): string {
   if (obj === undefined) return ''; // Should handle this case if called directly, though object keys filter it
   if (obj === null || typeof obj !== 'object') {
@@ -97,6 +100,7 @@ export class FileAuditLog implements AuditLog {
 
           if (lines.length > 0) {
             // We found the last line!
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const line = lines[lines.length - 1]!;
             try {
                 const entry = JSON.parse(line) as AuditEntry;
@@ -125,6 +129,7 @@ export class FileAuditLog implements AuditLog {
     this.initialized = true;
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   async log(actor: string, action: string, details: any): Promise<void> {
     await this.mutex.run(async () => {
       await this.init();

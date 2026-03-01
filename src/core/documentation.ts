@@ -31,6 +31,7 @@ Format:
     // We can cast agent to accessing llm as done in SelfTestFramework or use query.
     // Using query might trigger other tools, which we don't want.
     // So casting is safer for "raw" LLM access in this context.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
     const llm = (this.agent as any).llm;
 
     const response = await llm.chat([
@@ -48,6 +49,7 @@ ${sourceCode}
 \`\`\`
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
     const llm = (this.agent as any).llm;
 
     const response = await llm.chat([

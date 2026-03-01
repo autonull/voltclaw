@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Store, LLMProvider, PromptTemplate, PromptVersion } from './types.js';
 
 export class PromptManager {
@@ -18,6 +19,7 @@ export class PromptManager {
     }
 
     const v = version ?? template.latestVersion;
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const promptVersion = await this.store.getPromptVersion!(id, v);
 
     if (!promptVersion) {

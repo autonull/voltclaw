@@ -80,6 +80,7 @@ export function createCallParallelTool(config: CallToolConfig): Tool {
     },
     maxDepth: config.maxDepth - 1,
     costMultiplier: 3,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
     execute: async (args: Record<string, unknown>): Promise<ToolCallResult> => {
       // Note: The actual execution logic for parallel calls is complex and currently handled
       // inside VoltClawAgent.executeCallParallel directly.

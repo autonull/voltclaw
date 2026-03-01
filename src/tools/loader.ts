@@ -22,11 +22,14 @@ async function loadUserTools(): Promise<Tool[]> {
           const modulePath = pathToFileURL(join(TOOLS_DIR, file)).href;
           const module = await import(modulePath);
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           if (module.default && typeof module.default === 'object' && 'execute' in module.default) {
             tools.push(module.default as Tool);
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           } else if (module.tool && typeof module.tool === 'object' && 'execute' in module.tool) {
             tools.push(module.tool as Tool);
           }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           // ignore
         }

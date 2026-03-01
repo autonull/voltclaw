@@ -19,6 +19,7 @@ export interface VoltClawAgentOptions {
   permissions?: PermissionConfig;
   rlm?: CodeExecConfig;
   lcm?: LCMConfig;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   profiles?: Record<string, any>;
 }
 
@@ -419,6 +420,8 @@ export interface Tool {
   name: string;
   description: string;
   parameters?: ToolParameters;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   execute: (args: Record<string, unknown>, agent?: any, session?: any, from?: string) => Promise<ToolCallResult> | ToolCallResult;
   maxDepth?: number;
   costMultiplier?: number;

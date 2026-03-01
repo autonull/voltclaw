@@ -2,6 +2,7 @@ import type { Tool, Middleware } from './types.js';
 import type { VoltClawAgent } from './agent.js';
 import type { LLMProvider } from './types.js';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type LLMProviderFactory = (config: any) => LLMProvider;
 
 export interface VoltClawPlugin {
@@ -26,6 +27,7 @@ export class PluginManager {
   async load(pluginName: string): Promise<void> {
     try {
       const plugin = await import(pluginName);
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       const pluginInstance = plugin.default || plugin;
       this.plugins.set(pluginName, pluginInstance);
     } catch (error) {

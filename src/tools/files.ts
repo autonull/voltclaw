@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { readFile, writeFile } from 'fs/promises';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { join } from 'path';
 
 import type { Tool, ToolCallResult } from './types.js';

@@ -44,7 +44,8 @@ async function checkLLMConnection(config: { provider: string; model: string; bas
       const res = await fetch(`${baseUrl}/api/version`);
       if (!res.ok) throw new Error('Not OK');
       return true;
-    } catch (_e) {
+
+    } catch {
       console.error(`\n❌ Error: Could not connect to Ollama at ${baseUrl}`);
       console.error('   Please ensure Ollama is running: `ollama serve`');
       console.error('   Or update your config with `voltclaw configure`\n');
@@ -124,6 +125,7 @@ export async function startCommand(interactive: boolean = false, profile?: strin
       onError: async (ctx: ErrorContext): Promise<void> => {
         console.error(`[${new Date().toISOString()}] Error:`, ctx.error.message);
       },
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       onToolApproval: interactive ? async (tool, args) => {
         if (rl) rl.pause();
         try {

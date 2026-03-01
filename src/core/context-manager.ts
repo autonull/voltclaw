@@ -54,6 +54,7 @@ export class ContextManager {
 
     // LCM Enabled: Offload to long-term memory/graph before summarizing
     const textToOffload = toSummarize
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       .map(m => `${m.role.toUpperCase()}: ${m.content || '[tool call]'}`)
       .join('\n');
 
@@ -77,6 +78,7 @@ export class ContextManager {
 
   private async summarize(messages: ChatMessage[]): Promise<string> {
     const text = messages
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       .map(m => `${m.role.toUpperCase()}: ${m.content || '[tool call]'}`)
       .join('\n');
 

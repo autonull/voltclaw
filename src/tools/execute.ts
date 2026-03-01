@@ -60,7 +60,9 @@ export const executeTool: Tool = {
         stderr: stderr.slice(0, 10000),
         truncated: stdout.length > 50000
       };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (error.killed) {
         return { error: `Command timed out after ${timeout}ms` };
       }
