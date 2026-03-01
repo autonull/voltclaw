@@ -37,7 +37,8 @@ export const sleepTool: Tool = {
     required: ['milliseconds']
   },
   execute: async (args: Record<string, unknown>): Promise<ToolCallResult> => {
-    const ms = Number(args['milliseconds']) ?? 0;
+    const rawMs = args['milliseconds'];
+    const ms = rawMs !== undefined && rawMs !== null ? Number(rawMs) : 0;
     if (ms < 0 || ms > 60000) {
       return { error: 'Milliseconds must be between 0 and 60000' };
     }

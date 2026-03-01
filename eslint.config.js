@@ -6,7 +6,7 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   ...tseslint.configs.strict,
   {
-    ignores: ['dist/', 'node_modules/', 'examples/', '*.js', 'test/', 'tests/', 'scripts/', 'scripts/**/*.ts']
+    ignores: ['dist/', 'node_modules/', 'examples/', '*.js', 'test/', 'tests/', 'scripts/', 'scripts/**/*.ts', 'vitest.config.ts']
   },
   {
     languageOptions: {

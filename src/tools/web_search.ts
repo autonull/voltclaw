@@ -10,7 +10,13 @@ const SearchSchema = z.object({
   limit: z.number().optional().default(5).describe('Number of results to return')
 });
 
-async function fallbackSearch(query: string, limit: number): Promise<any[]> {
+interface SearchResult {
+  title: string;
+  url: string;
+  snippet: string;
+}
+
+async function fallbackSearch(query: string, limit: number): Promise<SearchResult[]> {
   try {
     const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
     const response = await axios.get(url, {
@@ -20,7 +26,7 @@ async function fallbackSearch(query: string, limit: number): Promise<any[]> {
     });
 
     const $ = cheerio.load(response.data);
-    const results: any[] = [];
+    const results: SearchResult[] = [];
 
     $('.result').each((i, el) => {
       if (results.length >= limit) return false;
@@ -29,7 +35,7 @@ async function fallbackSearch(query: string, limit: number): Promise<any[]> {
       const snippetEl = $(el).find('.result__snippet');
       const url = titleEl.attr('href');
 
-      if (titleEl.length && url) {
+      if (titleEl.length > 0 && url !== undefined && url !== '') {
         results.push({
           title: titleEl.text().trim(),
           url,
@@ -40,7 +46,7 @@ async function fallbackSearch(query: string, limit: number): Promise<any[]> {
     });
 
     return results;
-  } catch (error) {
+  } catch {
     // console.warn('Fallback search failed:', error);
     return [];
   }
@@ -84,9 +90,9 @@ export const webSearchTool: Tool = {
               const url = titleEl?.getAttribute('href');
 
               return {
-                title: titleEl?.textContent?.trim() || '',
-                url: url || '',
-                snippet: snippetEl?.textContent?.trim() || ''
+                title: titleEl?.textContent?.trim() ?? '',
+                url: url ?? '',
+                snippet: snippetEl?.textContent?.trim() ?? ''
               };
             });
           }, limit);
@@ -103,18 +109,20 @@ export const webSearchTool: Tool = {
       }
     } catch (error) {
        // If everything fails, try one last fallback if we haven't already
-       if (query) {
+       if (query !== '') {
            try {
                const results = await fallbackSearch(query, limit);
                if (results.length > 0) {
                    return { status: 'success', results, method: 'fallback_last_resort' };
                }
-           } catch (e) {}
+           } catch {
+               // ignore
+           }
        }
 
       return { error: formatToolError('web_search', error, args) };
     } finally {
-      if (browser) {
+      if (browser !== null) {
         await browser.close().catch(() => {});
       }
     }
